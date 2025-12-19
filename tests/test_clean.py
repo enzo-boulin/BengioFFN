@@ -32,3 +32,17 @@ def test_specific_cleaning_rules():
     expected = "de l'article du CCH, une mission parasismique par convention de contrôle technique n° : en date du :"
 
     assert result[0] == expected
+
+
+def test_dash_removal():
+    sample = (
+        "— Les communes s'administrent librement. — L'article R. 12-1 précise cela."
+    )
+
+    result = clean_civil_code(sample)
+
+    expected = [
+        "Les communes s'administrent librement.",
+        "L'article précise cela.",
+    ]
+    assert result == expected

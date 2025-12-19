@@ -37,15 +37,32 @@ def clean_civil_code(md_content: str) -> list[str]:
     # 9. Découpage en phrases
     sentences = re.split(r"(?<=[.!?])\s+", content)
 
-    return [s.strip() for s in sentences if s.strip()]
+    long_sentences = []
+    for s in sentences:
+        s = s.strip()
+
+        # Cette regex cherche au début de la chaîne (^)
+        # un tiret cadratin (—), demi-cadratin (–) ou simple (-) suivi d'espaces.
+        s = re.sub(r"^[—–-]\s*", "", s)
+
+        # Enlève les phrases de moins de 5 mots
+        if len(s.split()) >= 3:
+            long_sentences.append(s)
+
+    return long_sentences
 
 
-def scrap_sentences(path: str = "corpus/") -> list[str]:
+def scrap_sentences(
+    path: str = "corpus/", save_to: str = "civil_sentences.txt"
+) -> None:
     sentences = []
     for file in os.listdir(path):
+        print(f"Scrapping {file}...")
         filepath = path + file
         with open(filepath, "r") as f:
             brut = f.read()
             sentences += clean_civil_code(brut)
-            breakpoint()
-    return sentences
+    with open(save_to, "w", encoding="utf-8") as file:
+        for line in sentences:
+            file.write(line + "\n")
+        print(f"Done ! Sentences have been saved to {save_to}")
