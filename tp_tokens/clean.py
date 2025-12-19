@@ -1,36 +1,51 @@
+import os
 import re
 
 
 def clean_civil_code(md_content: str) -> list[str]:
-    """
-    Nettoie un texte Markdown issu du code civil pour ne garder que les phrases de fond.
-    """
-    # 0. Normalisation initiale : suppression des indentations de la docstring
-    # Si le texte vient d'une variable indentée dans un test
+    # 0. Normalisation initiale (gestion des indentations)
     lines = [line.strip() for line in md_content.strip().splitlines()]
     content = "\n".join(lines)
 
-    # 1. Suppression du bloc YAML (Frontmatter)
+    # 1. Suppression du bloc YAML
     content = re.sub(r"(?s)^---.*?---\n?", "", content)
 
-    # 2. Suppression des titres Markdown (H1 à H6)
-    # On ajoute \s* pour gérer les espaces éventuels avant le #
+    # 2. Suppression des titres Markdown
     content = re.sub(r"(?m)^\s*#+.*$", "", content)
 
-    # 3. Suppression des numéros d'articles (**Art. ...**)
+    # 3. Suppression des numéros d'articles EN GRAS (**Art. L111-1**)
     content = re.sub(r"\*\*Art\.\s+.*?\*\*", "", content)
 
-    # 4. Suppression des chiffres de listes (1. , 2. )
+    # 4. Suppression des références d'articles dans le texte (ex: "R. 125-17")
+    # Pattern : Une majuscule, un point, suivi de chiffres, points ou tirets
+    # On utilise \b pour s'assurer qu'on ne coupe pas un mot au milieu
+    content = re.sub(r"\b[A-Z]\.\s*[\d\.\-]+", "", content)
+
+    # 5. Suppression des zones de saisie de date (ex: ..../..../....)
+    # On cherche une suite de au moins 2 points ou slashs
+    content = re.sub(r"[\./]{2,}(?:[\./]+)*", "", content)
+
+    # 6. Suppression des chiffres de listes (1. , 2. )
     content = re.sub(r"(?m)^\s*\d+\.\s*", "", content)
 
-    # 5. Suppression des titres spécifiques connus
+    # 7. Suppression de textes spécifiques
     content = content.replace("Charte de l'élu local", "")
 
-    # 6. Normalisation des espaces
+    # 8. Normalisation des espaces (remplace doubles espaces et retours chariots)
     content = re.sub(r"\s+", " ", content).strip()
 
-    # 7. Découpage en phrases et nettoyage final
-    # On utilise une expression qui découpe proprement après la ponctuation
+    # 9. Découpage en phrases
     sentences = re.split(r"(?<=[.!?])\s+", content)
 
     return [s.strip() for s in sentences if s.strip()]
+
+
+def scrap_sentences(path: str = "corpus/") -> list[str]:
+    sentences = []
+    for file in os.listdir(path):
+        filepath = path + file
+        with open(filepath, "r") as f:
+            brut = f.read()
+            sentences += clean_civil_code(brut)
+            breakpoint()
+    return sentences

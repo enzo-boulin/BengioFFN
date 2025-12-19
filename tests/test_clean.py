@@ -22,3 +22,13 @@ def test_clean_civil_code():
         "Les élus locaux sont les membres des conseils élus.",
         "L'élu local exerce ses fonctions avec impartialité.",
     ]
+
+
+def test_specific_cleaning_rules():
+    text = """de l'article R. 125-17 du CCH, une mission parasismique par convention de contrôle technique n° :
+    en date du :..../..../...."""
+
+    result = clean_civil_code(text)
+    expected = "de l'article du CCH, une mission parasismique par convention de contrôle technique n° : en date du :"
+
+    assert result[0] == expected
