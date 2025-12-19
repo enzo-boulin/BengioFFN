@@ -19,12 +19,12 @@ def main():
     parser.add_argument("--batch", default=32)
     args = parser.parse_args()
 
-    context_size = args.context
-    e_dims = args.embeddings  # Dimensions des embeddings
-    n_hidden = args.hidden
-    seed = args.seed
-    max_steps = args.steps
-    mini_batch_size = args.batch
+    context_size = int(args.context)
+    e_dims = int(args.embeddings)  # Dimensions des embeddings
+    n_hidden = int(args.hidden)
+    seed = int(args.seed)
+    max_steps = int(args.steps)
+    mini_batch_size = int(args.batch)
 
     words = Words(args.datafile)
     print(words)
@@ -40,7 +40,7 @@ def main():
     print(f"{val_loss=}")
 
     g = torch.Generator().manual_seed(seed + 10)
-    for word in nn.generate_words(args.generate, words.itoc, g):
+    for word in nn.generate_words(int(args.generate), words.itoc, g):
         print(word)
 
     return 0
