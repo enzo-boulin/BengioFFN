@@ -43,9 +43,9 @@ def clean_civil_code(md_content: str) -> list[str]:
 
         # Cette regex cherche au début de la chaîne (^)
         # un tiret cadratin (—), demi-cadratin (–) ou simple (-) suivi d'espaces.
-        s = re.sub(r"^[—–-]\s*", "", s)
+        s = re.sub(r"^[—–―]\s*", "", s)
 
-        # Enlève les phrases de moins de 5 mots
+        # Enlève les phrases de moins de 3 mots
         if len(s.split()) >= 3:
             long_sentences.append(s)
 

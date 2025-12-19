@@ -46,3 +46,28 @@ def test_dash_removal():
         "L'article précise cela.",
     ]
     assert result == expected
+
+
+def test_short_sentences_removal():
+    sample = (
+        "Ceci est une phrase complète. Ok. Voici une autre phrase complète! Ah bon?"
+    )
+
+    result = clean_civil_code(sample)
+
+    expected = [
+        "Ceci est une phrase complète.",
+        "Voici une autre phrase complète!",
+    ]
+    assert result == expected
+
+
+def test_various_dashes():
+    samples = [
+        "― La construction, la reconstruction",
+        "– Une commune ou un établissement",
+        "— L'article R. 12-1 précise cela.",
+    ]
+    for sample in samples:
+        result = clean_civil_code(sample)
+        assert not result[0].startswith(("—", "–", "―"))
