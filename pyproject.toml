@@ -20,11 +20,12 @@ classifiers = [
 ]
 
 dependencies = [
-   # FIXME
+    "jupyterlab",
+    "numpy",
+    "matplotlib",
+    "torch",
 ]
 
 
 [project.scripts]
-# FIXME
-# parse_judilibre = "tp_regexps.scripts.parse_judilibre:main"
-
+train_generate_ffn = "tp_tokens.scripts.ffn_train:main"
