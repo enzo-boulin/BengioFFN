@@ -53,7 +53,7 @@ def clean_civil_code(md_content: str) -> list[str]:
 
 
 def scrap_sentences(
-    path: str = "corpus/", save_to: str = "civil_sentences.txt"
+    path: str = "corpus/", save_to: str = "data/civil_sentences.txt"
 ) -> None:
     sentences = []
     for file in os.listdir(path):
