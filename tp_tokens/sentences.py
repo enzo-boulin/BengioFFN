@@ -1,3 +1,4 @@
+import pickle
 import random
 
 import tokenizers
@@ -44,3 +45,7 @@ class Sentences:
 if __name__ == "__main__":
     sentences = Sentences()
     print(sentences)
+    import pickle
+
+    with open("models/sentences.pkl", "wb") as f:
+        pickle.dump(sentences, f)

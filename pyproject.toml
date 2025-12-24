@@ -12,6 +12,7 @@ description = "Travaux pratiques sur les tokens du cours NLP des mines de Paris"
 authors = [{ name = "Georges-Andre Silber", email = "georges-andre.silber@minesparis.psl.eu" }]
 license = { text = "CeCILL-B" }
 readme = "README.md"
+requires-python = ">=3.10"
 
 keywords = ["nlp"]
 

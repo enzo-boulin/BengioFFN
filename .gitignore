@@ -22,3 +22,5 @@ test
 *.sqlite
 .venv
 corpus
+models/datasets.pkl
+models/sentences.pkl
