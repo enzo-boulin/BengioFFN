@@ -1,36 +1,54 @@
-import random
-
 import torch
 
-from .words import Words
+from .sentences import Sentences
 
 
 class Datasets:
-    """Construits les jeu de données d'entraînement, de test et de validation.
+    """
+    Construit les jeux de données d'entraînement, de test et de validation.
 
-    Prend en paramètres une liste de mots et la taille du contexte pour la prédiction.
+    Prend en paramètres une liste de phrases et la taille du contexte pour la prédiction.
     """
 
-    def _build_dataset(self, lwords:list, context_size:int):
+    def _build_dataset(
+        self,
+        sentences: list[list[int]],
+        context_size: int,
+        pad_id: int,
+        eos_id: int,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
         X, Y = [], []
-        for w in lwords:
-            context = [0] * context_size
-            for ch in w + self.words.EOS:
-                ix = self.words.ctoi[ch]
+        for sentence_ids in sentences:
+            context = [pad_id] * context_size
+            for id in sentence_ids + [eos_id]:
                 X.append(context)
-                Y.append(ix)
-                context = context[1:] + [ix] # crop and append
+                Y.append(id)
+                context = context[1:] + [id]  # crop and append
         X = torch.tensor(X)
         Y = torch.tensor(Y)
         return X, Y
 
-    def __init__(self, words:Words, context_size:int, seed:int=42):
-        # 80%, 10%, 10%
-        self.shuffled_words = words.words.copy()
-        random.shuffle(self.shuffled_words)
-        self.n1 = int(0.8*len(self.shuffled_words))
-        self.n2 = int(0.9*len(self.shuffled_words))
-        self.words = words
-        self.Xtr, self.Ytr = self._build_dataset(self.shuffled_words[:self.n1], context_size)
-        self.Xdev, self.Ydev = self._build_dataset(self.shuffled_words[self.n1:self.n2], context_size)
-        self.Xte, self.Yte = self._build_dataset(self.shuffled_words[self.n2:], context_size)
+    def __init__(self, sentences: Sentences, context_size: int) -> None:
+        # train : 80%, validation : 10%, test : 10%
+        # NOTE: random shuffle is done in Sentences class
+        self.n1 = int(0.8 * sentences.nb_sentences)
+        self.n2 = int(0.9 * sentences.nb_sentences)
+
+        pad_id = sentences.token_to_id("[PAD]")
+        eos_id = sentences.token_to_id("[EOS]")
+
+        self.Xtr, self.Ytr = self._build_dataset(
+            sentences.token_ids_sentences[: self.n1],
+            context_size,
+            pad_id,
+            eos_id,
+        )
+        self.Xdev, self.Ydev = self._build_dataset(
+            sentences.token_ids_sentences[self.n1 : self.n2],
+            context_size,
+            pad_id,
+            eos_id,
+        )
+        self.Xte, self.Yte = self._build_dataset(
+            sentences.token_ids_sentences[self.n2 :], context_size, pad_id, eos_id
+        )

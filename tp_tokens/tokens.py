@@ -1,7 +1,8 @@
 from typing import Optional
 
-from tokenizers import Tokenizer
+from tokenizers import Tokenizer, normalizers
 from tokenizers.models import BPE
+from tokenizers.normalizers import Lowercase, StripAccents
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.trainers import BpeTrainer
 
@@ -10,10 +11,12 @@ def main(
     filepath: str = "data/civil_sentences.txt",
     savepath: Optional[str] = "models/civil_tokenizer.json",
 ):
-    tokenizer = Tokenizer(BPE())
-    tokenizer.pre_tokenizer = Whitespace()
+    tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
 
-    trainer = BpeTrainer()
+    tokenizer.pre_tokenizer = Whitespace()  # type: ignore
+    tokenizer.normalizer = normalizers.Sequence([Lowercase(), StripAccents()])  # type: ignore
+
+    trainer = BpeTrainer(special_tokens=["[PAD]", "[UNK]", "[EOS]"])
 
     # TODO: make train test split files
     files = [filepath]
@@ -24,7 +27,7 @@ def main(
 
 
 if __name__ == "__main__":
-    main()
+    # main()
     tokenizer = Tokenizer.from_file("models/civil_tokenizer.json")
     output = tokenizer.encode("La question préjudicielle est posée devant la CJUE.")
     print(output.tokens)

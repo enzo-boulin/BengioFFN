@@ -32,3 +32,4 @@ dependencies = [
 [project.scripts]
 train_generate_ffn = "tp_tokens.scripts.ffn_train:main"
 scrap_sentences = "tp_tokens.clean:scrap_sentences"
+train_tokenizer = "tp_tokens.tokens:main"
