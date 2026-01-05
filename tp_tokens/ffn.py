@@ -98,34 +98,65 @@ class BengioFFN:
         for p in self.parameters:
             p.data += -lr * p.grad
 
-    @torch.no_grad()  # this decorator disables gradient tracking
-    def compute_loss(self, X, Y):
-        emb = self.C[X]  # Embed characters into vectors
-        embcat = emb.view(emb.shape[0], -1)  # Concatenate the vectors
-        hpreact = embcat @ self.W1  # hidden layer pre-activation
-        hpreact = (
-            self.bngain * (hpreact - self.bnmean_running) / self.bnstd_running
-            + self.bnbias
-        )
-        h = torch.tanh(hpreact)  # hidden layer
-        logits = h @ self.W2 + self.b2  # output layer
-        loss = F.cross_entropy(logits, Y)  # loss function
-        return loss
+    # @torch.no_grad()  # this decorator disables gradient tracking
+    # def compute_loss(self, X, Y):
+    #     emb = self.C[X]  # Embed characters into vectors
+    #     embcat = emb.view(emb.shape[0], -1)  # Concatenate the vectors
+    #     hpreact = embcat @ self.W1  # hidden layer pre-activation
+    #     hpreact = (
+    #         self.bngain * (hpreact - self.bnmean_running) / self.bnstd_running
+    #         + self.bnbias
+    #     )
+    #     h = torch.tanh(hpreact)  # hidden layer
+    #     logits = h @ self.W2 + self.b2  # output layer
+    #     loss = F.cross_entropy(logits, Y)  # loss function
+    #     return loss
+
+    @torch.no_grad()
+    def compute_loss(self, X, Y, batch_size=1024) -> float:
+        """
+        Computes the loss in batches to avoid OOM (Out Of Memory) errors.
+        """
+        total_loss = 0.0
+        n_samples = X.shape[0]
+
+        # Iterate over the data in chunks
+        for i in range(0, n_samples, batch_size):
+            Xb = X[i : i + batch_size]
+            Yb = Y[i : i + batch_size]
+
+            # Forward pass (same logic as before, but on a subset)
+            emb = self.C[Xb]
+            embcat = emb.view(emb.shape[0], -1)
+            hpreact = embcat @ self.W1
+            hpreact = (
+                self.bngain * (hpreact - self.bnmean_running) / self.bnstd_running
+                + self.bnbias
+            )
+            h = torch.tanh(hpreact)
+            logits = h @ self.W2 + self.b2
+
+            # Use reduction='sum' to aggregate properly
+            loss = F.cross_entropy(logits, Yb, reduction="sum")
+            total_loss += loss.item()
+
+        # Return the mean loss over all samples
+        return total_loss / n_samples
 
     @torch.no_grad()
     def training_loss(self, datasets: Datasets):
         loss = self.compute_loss(datasets.Xtr, datasets.Ytr)
-        return loss.item()
+        return loss
 
     @torch.no_grad()
     def test_loss(self, datasets: Datasets):
         loss = self.compute_loss(datasets.Xte, datasets.Yte)
-        return loss.item()
+        return loss
 
     @torch.no_grad()
     def dev_loss(self, datasets: Datasets):
         loss = self.compute_loss(datasets.Xdev, datasets.Ydev)
-        return loss.item()
+        return loss
 
     @torch.no_grad()
     def generate_sentence(
