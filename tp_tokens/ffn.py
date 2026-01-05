@@ -154,7 +154,7 @@ class BengioFFN:
             else:
                 # Stop when encounting '.'
                 break
-        return "".join(id_to_token(i) for i in out)
+        return " ".join(id_to_token(i) for i in out)
 
     @torch.no_grad()
     def generate_sentences(
