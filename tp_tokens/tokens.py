@@ -8,6 +8,7 @@ from tokenizers.trainers import BpeTrainer
 
 
 def main(
+    vocab_size: int = 3000,
     filepath: str = "data/civil_sentences.txt",
     savepath: Optional[str] = "models/civil_tokenizer.json",
 ):
@@ -16,7 +17,9 @@ def main(
     tokenizer.pre_tokenizer = Whitespace()  # type: ignore
     tokenizer.normalizer = normalizers.Sequence([Lowercase(), StripAccents()])  # type: ignore
 
-    trainer = BpeTrainer(special_tokens=["[PAD]", "[UNK]", "[EOS]"])
+    trainer = BpeTrainer(
+        vocab_size=vocab_size, special_tokens=["[PAD]", "[UNK]", "[EOS]"]
+    )
 
     # TODO: make train test split files
     files = [filepath]
