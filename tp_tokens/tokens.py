@@ -1,9 +1,8 @@
 from typing import Optional
 
-from tokenizers import Tokenizer, normalizers
+from tokenizers import Tokenizer, decoders, normalizers, pre_tokenizers
 from tokenizers.models import BPE
 from tokenizers.normalizers import Lowercase, StripAccents
-from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.trainers import BpeTrainer
 
 
@@ -14,7 +13,10 @@ def main(
 ):
     tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
 
-    tokenizer.pre_tokenizer = Whitespace()  # type: ignore
+    tokenizer.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=False)  # type: ignore
+
+    # 3. Le décodeur qui fera l'inverse (recoller les morceaux proprement)
+    tokenizer.decoder = decoders.ByteLevel()  # type: ignore
     tokenizer.normalizer = normalizers.Sequence([Lowercase(), StripAccents()])  # type: ignore
 
     trainer = BpeTrainer(

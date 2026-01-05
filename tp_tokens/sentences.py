@@ -22,15 +22,15 @@ class Sentences:
 
         self.nb_sentences = len(self.sentences)
 
-        tokenizer = tokenizers.Tokenizer.from_file(tokenizer_path)
-        self.tokens = tokenizer.get_vocab()
+        self.tokenizer = tokenizers.Tokenizer.from_file(tokenizer_path)
+        self.tokens = self.tokenizer.get_vocab()
         self.nb_tokens = len(self.tokens)
-        self.token_to_id = tokenizer.token_to_id
-        self.id_to_token = tokenizer.id_to_token
+        self.token_to_id = self.tokenizer.token_to_id
+        self.id_to_token = self.tokenizer.id_to_token
 
         self.token_ids_sentences = []
         for sentence in self.sentences:
-            self.token_ids_sentences.append(tokenizer.encode(sentence).ids)
+            self.token_ids_sentences.append(self.tokenizer.encode(sentence).ids)
 
     def __repr__(self) -> str:
         representation: list[str] = []

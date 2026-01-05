@@ -1,4 +1,4 @@
-from typing import Callable, Generator
+from typing import Generator
 
 import torch
 import torch.nn.functional as F
@@ -159,9 +159,7 @@ class BengioFFN:
         return loss
 
     @torch.no_grad()
-    def generate_sentence(
-        self, id_to_token: Callable, pad_id: int, eos_id: int, g
-    ) -> str:
+    def generate_sentence(self, pad_id: int, eos_id: int, g) -> list[int]:
         out = []
         context = [pad_id] * self.context_size
         while True:
@@ -180,20 +178,21 @@ class BengioFFN:
             # Shift the context window
             context = context[1:] + [ix]
             # Store the generated character
-            if ix != eos_id:
-                out.append(ix)
-            else:
-                # Stop when encounting '.'
+
+            if ix == eos_id:
                 break
-        return " ".join(id_to_token(i) for i in out)
+
+            out.append(ix)
+
+        return out
 
     @torch.no_grad()
     def generate_sentences(
-        self, n, id_to_token: Callable, pad_id: int, eos_id: int, g
-    ) -> Generator[str, None, None]:
+        self, n, pad_id: int, eos_id: int, g
+    ) -> Generator[list[int], None, None]:
         "Génère n mots."
         for _ in range(n):
-            yield self.generate_sentence(id_to_token, pad_id, eos_id, g)
+            yield self.generate_sentence(pad_id, eos_id, g)
 
     def __repr__(self):
         repr = []
