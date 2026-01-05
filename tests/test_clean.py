@@ -71,3 +71,12 @@ def test_various_dashes():
     for sample in samples:
         result = clean_civil_code(sample)
         assert not result[0].startswith(("—", "–", "―"))
+
+
+def test_no_html_tags():
+    sample = """<div class="dqtable"><div class="ali-table"><table align="center" border="1" cellpadding="0" cellspacing="0" width="680"><tbody><tr><td width="151"><p align="center">NUMÉRO <br/>du tarif des douanes </p></td><td width="529"><p align="center">DÉSIGNATION DES MARCHANDISES </p></td></tr><tr><td valign="top" width="151"><p align="center">Ex 0201 </p></td><td valign="top" width="529"><p>Viandes des animaux domestiques de l'espèce bovine fraîches ou réfrigérées."""
+
+    result = clean_civil_code(sample)
+
+    expected = []
+    assert result == expected

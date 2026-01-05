@@ -13,6 +13,9 @@ def clean_civil_code(md_content: str) -> list[str]:
     # 2. Suppression des titres Markdown
     content = re.sub(r"(?m)^\s*#+.*$", "", content)
 
+    # Suppression des blocs HTML
+    content = re.sub(r"^.*[<>].*$\n?", "", content, flags=re.MULTILINE)
+
     # 3. Suppression des numéros d'articles EN GRAS (**Art. L111-1**)
     content = re.sub(r"\*\*Art\.\s+.*?\*\*", "", content)
 
