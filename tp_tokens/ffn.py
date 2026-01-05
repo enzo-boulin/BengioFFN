@@ -124,7 +124,7 @@ class BengioFFN:
 
     @torch.no_grad()
     def dev_loss(self, datasets: Datasets):
-        loss = self.compute_loss(datasets.Xdev, datasets.Xdev)
+        loss = self.compute_loss(datasets.Xdev, datasets.Ydev)
         return loss.item()
 
     @torch.no_grad()
