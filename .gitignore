@@ -24,3 +24,5 @@ test
 corpus
 models/datasets.pkl
 models/sentences.pkl
+civil_sentences.txt
+data/civil_sentences.txt
