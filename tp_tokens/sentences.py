@@ -34,7 +34,7 @@ class Sentences:
 
     def __repr__(self) -> str:
         representation: list[str] = []
-        representation.append("<Words")
+        representation.append("<Sentences")
         representation.append(f'  data_path="{self.data_path}"')
         representation.append(f'  tokenizer_path="{self.tokenizer_path}"')
         representation.append(f'  nb_sentences="{self.nb_sentences}"')
