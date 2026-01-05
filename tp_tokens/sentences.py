@@ -15,12 +15,12 @@ class Sentences:
     ) -> None:
         self.data_path = data_path
         self.tokenizer_path = tokenizer_path
-        self.sentences = open(self.data_path, "r").read().splitlines()
+        sentences = open(self.data_path, "r").read().splitlines()
 
         random.seed(seed)
-        random.shuffle(self.sentences)
+        random.shuffle(sentences)
 
-        self.nb_sentences = len(self.sentences)
+        self.nb_sentences = len(sentences)
 
         self.tokenizer = tokenizers.Tokenizer.from_file(tokenizer_path)
         self.tokens = self.tokenizer.get_vocab()
@@ -29,8 +29,9 @@ class Sentences:
         self.id_to_token = self.tokenizer.id_to_token
 
         self.token_ids_sentences = []
-        for sentence in self.sentences:
+        for sentence in sentences:
             self.token_ids_sentences.append(self.tokenizer.encode(sentence).ids)
+        del sentences
 
     def __repr__(self) -> str:
         representation: list[str] = []

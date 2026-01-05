@@ -11,12 +11,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--datafile", default="data/light_civil_sentences.txt")
     parser.add_argument("--generate", default=5)
-    parser.add_argument("--context", default=10)
-    parser.add_argument("--embeddings", default=100)
-    parser.add_argument("--hidden", default=50)
+    parser.add_argument("--context", default=5)
+    parser.add_argument("--embeddings", default=128)
+    parser.add_argument("--hidden", default=256)
     parser.add_argument("--seed", default=42)
     parser.add_argument("--steps", default=10000)
-    parser.add_argument("--batch", default=32)
+    parser.add_argument("--batch", default=128)
     args = parser.parse_args()
     context_size = int(args.context)
     e_dims = int(args.embeddings)  # Dimensions des embeddings
@@ -41,16 +41,9 @@ def main():
     print(f"{train_loss=}")
     print(f"{val_loss=}")
 
-    # g = torch.Generator().manual_seed(seed + 10)
-    # for sentence in nn.generate_sentences(int(args.generate), pad_id, eos_id, g):
-    #     print(sentence)
-
     for _ in range(int(args.generate)):
-        # 1. Le réseau génère les IDs
         generated_ids = nn.generate_sentence(pad_id, eos_id, g)
 
-        # 2. Le tokenizer transforme les IDs en texte propre
-        # skip_special_tokens=True enlève les [PAD] ou [UNK] résiduels
         text = sentences.tokenizer.decode(generated_ids, skip_special_tokens=True)
 
         print(f"> {text}")

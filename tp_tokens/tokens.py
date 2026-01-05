@@ -7,7 +7,7 @@ from tokenizers.trainers import BpeTrainer
 
 
 def main(
-    vocab_size: int = 3000,
+    vocab_size: int = 30000,
     filepath: str = "data/civil_sentences.txt",
     savepath: Optional[str] = "models/civil_tokenizer.json",
 ):
