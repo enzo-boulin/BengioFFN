@@ -1,6 +1,16 @@
-# tp_nlp_tokens_mines
+# Bengio FFN
 
-Codes:
+Implémentation d'un réseau de neurones de type Feed-Forward Network inspiré du papier de Bengio et al. de 2003 [A Neural Probabilistic Language Model.](https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf)
+
+Étude des initialisations, des fonctions d'activation et de la normalisation.
+
+Bibliographie indicative:
+
+* "Kaiming init": https://arxiv.org/abs/1502.01852
+* BatchNorm: https://arxiv.org/abs/1502.03167
+* Illustration de certains problèmes liés à BatchNorm: https://arxiv.org/abs/2105.07576
+
+Codes juridiques utilisés pour l'entrainement :
 
 <https://storage.gra.cloud.ovh.net/v1/AUTH_4d7d1bcd41914ee184ef80e2c75c4fb1/dila-legi-codes/codes.zip>
 
@@ -9,14 +19,26 @@ Codes:
 Installation de ce paquetage dans un environnement virtuel:
 
 ```bash
-python3 -m venv .venv/tp_nlp_tokens_mines
-source .venv/tp_nlp_tokens_mines/bin/activate
+python3 -m venv .venv/bengio_ffn
+source .venv/bengio_ffn/bin/activate
 pip install -e .
 ```
 
 ```bash
 train_generate_ffn 
 ```
+
+## Paramètres du modèle
+
+Les phrases ont été générées avec les hyperparamètres par défaut suivants :
+
+- **Fichier de données** : `data/light_civil_sentences.txt`
+- **Taille du contexte** : 5 tokens
+- **Dimension des embeddings** : 128
+- **Taille de la couche cachée** : 256
+- **Graine aléatoire (Seed)** : 42
+- **Nombre d'étapes d'entraînement** : 10000
+- **Taille du batch** : 128
 
 ## Exemples de phrases générées 
 * il raccordements au moins réparereuses par écrit arrêté du ministre chargé du tourisme.
