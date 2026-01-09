@@ -42,6 +42,7 @@ Les phrases ont été générées avec les hyperparamètres par défaut suivants
 - **Nombre d'étapes d'entraînement** : 10000
 - **Taille du batch** : 128
 
+### Exemples
 
 * il raccordements au moins réparereuses par écrit arrêté du ministre chargé du tourisme.
 * il-ci à ce jour les agents doit être autorisés en quarante ayant : 1° forfaitaire d'assurer ; b) pour le projet de sécurité non, pour le compte prévu, sous réserve des articles diffusent sont audiovisuels par celles à l'article est effectué aucune à la procédure d'{ de terrains des décisions de présents sur le territoire national prévus qu' nair pour place il vibration la date de l'adaptation.
